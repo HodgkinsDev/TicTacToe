@@ -6,20 +6,22 @@ import pygame
   
 # Initializing Pygame 
 pygame.init() 
-pygame.display.set_caption('Tic Tac Toe 1.0')
+pygame.display.set_caption('Tic Tac Toe 1.1')
   
 # Initializing surface 
 surface = pygame.display.set_mode((300,300))
 
+FollowMouse = pygame.Rect(0, 0, 31, 31)
+
 #Initalizing Font
 font = pygame.font.Font('./font.ttf', 60)
 font2 = pygame.font.Font('./font.ttf', 20)
-font3 = pygame.font.Font('./font.ttf', 40)
 font4 = pygame.font.Font('./font.ttf', 60)
 font5 = pygame.font.Font('./font.ttf', 40)
 font6 = pygame.font.Font('./font.ttf', 40)
 font7 = pygame.font.Font('./font.ttf', 60)
 font8 = pygame.font.Font('./font.ttf', 40)
+font9 = pygame.font.Font('./font.ttf', 60)
 
 color = (255,0,0) 
 Black = (0,0,0)
@@ -28,6 +30,8 @@ blue = (0, 0, 128)
 White = (255,255,255)
 
 #Creating Each X and O
+Player_O10 = o()
+Player_X10 = x()
 Player_X1 = x()
 Player_X2 = x()
 Player_X3 = x()
@@ -37,7 +41,6 @@ Player_X6 = x()
 Player_X7 = x()
 Player_X8 = x()
 Player_X9 = x()
-Player_X10 = x()
 Player_X11 = x()
 Player_O1 = o()
 Player_O2 = o()
@@ -48,7 +51,6 @@ Player_O6 = o()
 Player_O7 = o()
 Player_O8 = o()
 Player_O9 = o()
-Player_O10 = o()
 Player_O11 = o()
 
 line1 = line()
@@ -99,9 +101,9 @@ Player_X8.x = 100
 Player_X8.y = 200
 Player_X9.x = 200
 Player_X9.y = 200
-Player_X10.x = 22
-Player_X10.y = 70
-Player_X11.x = 100
+Player_X10.x = 30
+Player_X10.y = 100
+Player_X11.x = 85
 Player_X11.y = 85
 
 #O For Each Square
@@ -124,8 +126,8 @@ Player_O8.y = 200
 Player_O9.x = 200
 Player_O9.y = 200
 Player_O10.x = 180
-Player_O10.y = 70
-Player_O11.x = 100
+Player_O10.y = 100
+Player_O11.x = 85
 Player_O11.y = 85
 
 def Draw_TitleBoard(x,y):
@@ -299,17 +301,25 @@ def ResetBoard():
     line8.drawn = False
 
 def TitleScreen():
-    text = font.render('Tic Tac Toe', True, White, Black)
-    text2 = font2.render('Created By Jacob Hodgkins', True, White, Black)
-    text3 = font3.render('Press s To Start!', True, White, Black)
-    textRect = text.get_rect()
-    textRect2 = text2.get_rect()
-    textRect3 = text3.get_rect()
-    textRect.center = (150,35)
-    textRect2.center = (150,80)
-    textRect3.center = (150,250)
-    keys = pygame.key.get_pressed()
+    fontsize = 40
     while True:
+        text = font.render('Tic Tac Toe', True, White, Black)
+        text2 = font2.render('Created By Jacob Hodgkins', True, White, Black)
+        textRect = text.get_rect()
+        textRect2 = text2.get_rect()
+        textRect.center = (150,35)
+        textRect2.center = (150,80)
+        surface.fill((0,0,0))
+        font3 = pygame.font.Font('./font.ttf', fontsize)
+        text3 = font3.render('Start', True, White, Black)
+        textRect3 = text3.get_rect()
+        textRect3.center = (150,260)
+        FollowMouse.center = pygame.mouse.get_pos()
+        collide1 = FollowMouse.colliderect(textRect3)
+        if collide1:
+            fontsize = 45
+        else:
+            fontsize = 40
         surface.blit(text, textRect)
         surface.blit(text2, textRect2)
         surface.blit(text3, textRect3)
@@ -319,24 +329,52 @@ def TitleScreen():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
+            if event.type == pygame.MOUSEBUTTONUP:
+                if collide1:
                     return 1
+#            if event.type == pygame.KEYDOWN:
+#                if event.key == pygame.K_s:
+#                    return 1
+
 def WhoStarts():
-    surface.fill((0,0,0))
-    text4 = font.render('Who Starts?', True, White, Black)
-    textRect4 = text4.get_rect()
-    textRect4.center = (150,35)
-    text5 = font5.render('Press o for O', True, White, Black)
-    textRect5 = text5.get_rect()
-    textRect5.center = (150,210)
-    text6 = font6.render('Press x for X', True, White, Black)
-    textRect6 = text6.get_rect()
-    textRect6.center = (150,255)
+    x_size_x = 90
+    x_size_y = 90
+    o_size_x = 90
+    o_size_y = 90
     while True:
+        text4 = font.render('Who Starts?', True, White, Black)
+        textRect4 = text4.get_rect()
+        textRect4.center = (155,35)
+        text9 = font9.render('Select One', True, White, Black)
+        textRect9 = text9.get_rect()
+        textRect9.center = (150,255)
+        surface.fill((0,0,0))
+        FollowPeice1 = pygame.Rect(0, 0, x_size_x, x_size_y)
+        FollowPeice1.center = Player_X10.x,Player_X10.y
+        FollowPeice2 = pygame.Rect(0, 0, o_size_x, o_size_y)
+        FollowPeice2.center = Player_O10.x,Player_O10.y
+        Player_X10.sprite = pygame.transform.scale(Player_X10.XPlayer, (x_size_x, x_size_y))
+        Player_O10.sprite = pygame.transform.scale(Player_O10.OPlayer, (o_size_x, o_size_y))
+        FollowMouse.center = pygame.mouse.get_pos()
+        collide1 = FollowMouse.colliderect(FollowPeice1)
+        collide2 = FollowMouse.colliderect(FollowPeice2)
+        if collide1:
+            x_size_x = 110
+            x_size_y = 110
+            o_size_x = 90
+            o_size_y = 90
+        elif collide2:
+            o_size_x = 110
+            o_size_y = 110
+            x_size_x = 90
+            x_size_y = 90
+        else:
+            o_size_x = 90
+            o_size_y = 90
+            x_size_x = 90
+            x_size_y = 90
         surface.blit(text4, textRect4)
-        surface.blit(text5, textRect5)
-        surface.blit(text6, textRect6)
+        surface.blit(text9, textRect9)
         Draw_X(Player_X10.x,Player_X10.y,10)
         Draw_O(Player_O10.x,Player_O10.y,10)
         pygame.display.flip()
@@ -344,30 +382,54 @@ def WhoStarts():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_x:
+            if event.type == pygame.MOUSEBUTTONUP:
+                if collide1:
                     return 1
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_o:
+                if collide2:
                     return 2
+#            if event.type == pygame.KEYDOWN:
+#                if event.key == pygame.K_x:
+#                    return 1
+#            if event.type == pygame.KEYDOWN:
+#                if event.key == pygame.K_o:
+#                    return 2
 
 def WinnerScreen(p):
-    surface.fill((0,0,0))
-    text8 = font8.render('Press c To Continue!', True, White, Black)
-    text9 = font8.render('Press q to Quit!', True, White, Black)
-    textRect8 = text8.get_rect()
-    textRect8.center = (150,220)
-    textRect9 = text8.get_rect()
-    textRect9.center = (170,265)
-    if p == 1:
-        text7 = font.render('X Is The Winner!', True, White, Black)
-    if p == 2:
-        text7 = font.render('O Is The Winner!', True, White, Black)
-    if p == 3:
-        text7 = font.render('Nobody Wins!', True, White, Black)
-    textRect7 = text7.get_rect()
-    textRect7.center = (150,35)
+    fontsize1 = 40
+    fontsize2 = 40
+    Player_X11.sprite = pygame.transform.scale(Player_X11.XPlayer, (130, 130))
+    Player_O11.sprite = pygame.transform.scale(Player_O11.OPlayer, (130, 130))
+    cancel_sign.sprite = pygame.transform.scale(cancel_sign.cancell,(130,130))
     while True:
+        font10 = pygame.font.Font('./font.ttf', fontsize1)
+        font11 = pygame.font.Font('./font.ttf', fontsize2)
+        surface.fill((0,0,0))
+        text8 = font10.render('Play Again', True, White, Black)
+        text9 = font11.render('Quit', True, White, Black)
+        textRect8 = text8.get_rect()
+        textRect8.center = (80,255)
+        textRect9 = text9.get_rect()
+        textRect9.center = (245,255)
+        FollowMouse.center = pygame.mouse.get_pos()
+        collide1 = FollowMouse.colliderect(textRect8)
+        collide2 = FollowMouse.colliderect(textRect9)
+        if collide1:
+            fontsize1 = 45
+            fontsize2 = 40
+        elif collide2:
+            fontsize2 = 45
+            fontsize1 = 40
+        else:
+            fontsize1 = 40
+            fontsize2 = 40
+        if p == 1:
+            text7 = font.render('X Is The Winner!', True, White, Black)
+        if p == 2:
+            text7 = font.render('O Is The Winner!', True, White, Black)
+        if p == 3:
+            text7 = font.render('Nobody Wins!', True, White, Black)
+        textRect7 = text7.get_rect()
+        textRect7.center = (150,35)
         surface.blit(text7, textRect7)
         surface.blit(text8, textRect8)
         surface.blit(text9, textRect9)
@@ -382,13 +444,19 @@ def WinnerScreen(p):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
+            if event.type == pygame.MOUSEBUTTONUP:
+                if collide1:
+                    return 1
+                if collide2:
                     pygame.quit()
                     quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_c:
-                    return 1
+#            if event.type == pygame.KEYDOWN:
+#                if event.key == pygame.K_q:
+#                    pygame.quit()
+#                    quit()
+#            if event.type == pygame.KEYDOWN:
+#                if event.key == pygame.K_c:
+#                    return 1
 
 def drawboard():
     pygame.draw.rect(surface, White, pygame.Rect(0, 0, 100, 100))
@@ -571,15 +639,13 @@ def Place(nn,p):
             return 2
     else:
         return 3
-        
+
 TitleScreen()
 first_player = WhoStarts()
 turn = first_player
 RUNNING = True
-os.system("clear")
 while RUNNING:
     drawboard()
-    os.system("clear")
     cc = CheckForWin()
     drawboard()
     if cc == 1:
