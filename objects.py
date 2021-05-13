@@ -45,5 +45,5 @@ class cancel:
     sprite_file = "./sprites/cancel.png"
     cancell = pygame.image.load(sprite_file)
     sprite = pygame.transform.scale(cancell,(100,100))
-    x = 100
+    x = 85
     y = 85
