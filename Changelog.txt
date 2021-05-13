@@ -1,0 +1,11 @@
+TicTacToe 1.1
+
+Written By Jacob Hodgkins
+
+A simple TicTacToe game written in Python with Pygame! 
+
+1.0 ---> 1.1
+
+Menu options are now clickable instead of "Enter THIS key to DOTHIS"
+
+Changed Continue to Play Again in the Win Screen
